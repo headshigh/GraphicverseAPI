@@ -11,6 +11,9 @@ const multer = require("multer");
 const fake = require("../models/fake");
 const upload = require("../upload");
 const jwt = require("jsonwebtoken");
+const { FSWatcher } = require("vite");
+const fs = require("fs");
+const path = require("path");
 
 const getAllData = async (req, res) => {
   //must send page as query to limit the data sent to 31 else if page is not defined all th data will be sent coz it is required in row component
@@ -73,8 +76,11 @@ const postData = async (req, res) => {
           User = user;
         }
       });
-      console.log(User.loggeduser.username);
-      // console.log(req.files);
+      console.log(path.join(__dirname, "..", "uploads", req.files[0].filename));
+      // const file = path.basename(
+      //   path.join(__dirname + "../uploads/" + req.files[0].filename)
+      // );
+      // console.log(file);
       // console.log(req.body.Name);
 
       const newimage = graph
@@ -82,11 +88,17 @@ const postData = async (req, res) => {
           Name: req.body.Name,
           uploader: User.loggeduser.username,
           Image: {
-            data: req.files[0].filename,
+            data: fs.readFileSync(
+              path.join(__dirname, "..", "uploads", req.files[0].filename)
+            ),
+
+            // data: fs.readFileSync("uploads"),
             contentType: "image/png",
           },
           Psd: {
-            data: req.files[0].filename,
+            data: fs.readFileSync(
+              path.join(__dirname, "..", "uploads", req.files[1].filename)
+            ),
             // data: req.files["testImage"][1].filename,
           },
         })
