@@ -28,6 +28,9 @@ const dataSchema = new mongoose.Schema(
     Size: {
       type: Number,
     },
+    fileformat: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

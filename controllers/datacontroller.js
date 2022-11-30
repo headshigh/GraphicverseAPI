@@ -48,13 +48,20 @@ const getOne = async (req, res) => {
   const graphic2 = eval(cat);
   // console.log(graphic2);
   const fileid = req.params.fileid;
+  console.log(fileid.slice(3));
+  var result;
   // console.log(fileid);
   // var id = eval(fileid);
   try {
-    const result = await graphic2.findOne({
-      FileId: fileid,
-    });
-    res.status(200).json({ msg: result });
+    if (fileid.slice(0, 2) == "id") {
+      result = await graphic2.findOne({ _id: fileid.slice(3) });
+      res.status(200).json({ msg: result });
+    } else {
+      result = await graphic2.findOne({
+        FileId: fileid,
+      });
+      res.status(200).json({ msg: result });
+    }
   } catch (err) {
     res.status(500).json({ err: err });
   }
@@ -82,6 +89,7 @@ const postData = async (req, res) => {
       // );
       // console.log(file);
       // console.log(req.body.Name);
+      console.log(req.files[1].filename.slice(-3));
 
       const newimage = graph
         .create({
@@ -101,6 +109,7 @@ const postData = async (req, res) => {
             ),
             // data: req.files["testImage"][1].filename,
           },
+          fileformat: req.files[1].filename.slice(-3),
         })
         .then(() => res.send("sucessful"))
 
