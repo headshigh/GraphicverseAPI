@@ -15,28 +15,59 @@ const { FSWatcher } = require("vite");
 const fs = require("fs");
 const path = require("path");
 
+// const getDataRow = async (req, res) => {
+//   var datatofetch = req.params.design;
+//   var graphic = eval(datatofetch);
+//   console.log(graphic);
+//   const count = await graphic.countDocuments({});
+//   const skip = Math.floor(Math.random() * count);
+//     const output = graphic.find({});
+//     var result;
+//     console.log("row");
+//     result = await output.skip(skip).limit(30);
+//     if (result) {
+//       res.status(200).json({ msg: result });
+//     }
+
+//   }
+// };
 const getAllData = async (req, res) => {
   //must send page as query to limit the data sent to 31 else if page is not defined all th data will be sent coz it is required in row component
   var datatofetch = req.params.design;
   var graphic = eval(datatofetch);
   console.log(graphic);
+  const count2 = await graphic.countDocuments({});
+
   const page = req.query.page;
   const dataperpage = req.query.dataperpage || 31;
   const skip = dataperpage * (page - 1);
+  const skip2 = Math.floor(Math.random() * count2);
   try {
-    const output = graphic.find({});
-    var result1;
-    if (req.query.page) {
-      result1 = output.skip(skip).limit(dataperpage);
+    var output;
+    if (req.query.row) {
+      output = graphic.find({});
+      var result2;
+      console.log("row");
+      result2 = await output.skip(skip2).limit(30);
+      if (result2) {
+        return res.status(200).json({ msg: result2 });
+      }
     } else {
-      result1 = await output;
-    }
-    console.log(req.query.page);
-    const count = await graphic.countDocuments({});
-    // console.log(count);
-    const result = await result1;
-    if (result) {
-      res.status(200).json({ msg: result, count: count });
+      output = graphic.find({});
+      var result1;
+
+      if (req.query.page) {
+        result1 = output.skip(skip).limit(dataperpage);
+      } else {
+        result1 = await output;
+      }
+      console.log(req.query.page);
+      const count = await graphic.countDocuments({});
+      // console.log(count);
+      const result = await result1;
+      if (result) {
+        return res.status(200).json({ msg: result, count: count });
+      }
     }
   } catch (err) {
     res.status(404).json({ msg: err });
@@ -117,4 +148,8 @@ const postData = async (req, res) => {
     }
   });
 };
-module.exports = { getAllData, getOne, postData };
+const getuserdata = async (req, res) => {
+  const username = req.params.username;
+  console.log(username);
+};
+module.exports = { getAllData, getOne, postData, getuserdata };
