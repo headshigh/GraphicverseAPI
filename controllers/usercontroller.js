@@ -3,9 +3,13 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, name, email, password } = req.body;
+  console.log(req.body);
   try {
     if (!username) {
+      return res.status(500).json({ msg: "Please enter username" });
+    }
+    if (!name) {
       return res.status(500).json({ msg: "Please enter username" });
     }
     if (!email) {
@@ -15,12 +19,16 @@ const register = async (req, res) => {
       return res.status(500).json({ msg: "Please enter password" });
     } else {
       const hashedpassword = await bcrypt.hash(req.body.password, 10);
+      // console.log("hi");
       const newuser = await user.create({
         username: username,
         email: email,
+        fullname: name,
         password: hashedpassword,
       });
-      return res.status(200).json({ user: newuser });
+      if (newuser) {
+        return res.status(200).json({ msg: newuser });
+      }
     }
   } catch (err) {
     if (err.code == "11000") {
@@ -30,6 +38,9 @@ const register = async (req, res) => {
       if (err.keyPattern.email) {
         return res.status(500).json({ err: "email already in use" });
       }
+    } else {
+      console.log(err);
+      return res.status(500).json({ err: "unable to register account" });
     }
   }
 };

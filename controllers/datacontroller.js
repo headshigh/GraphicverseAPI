@@ -14,6 +14,7 @@ const jwt = require("jsonwebtoken");
 const { FSWatcher } = require("vite");
 const fs = require("fs");
 const path = require("path");
+const User = require("../models/users");
 
 // const getDataRow = async (req, res) => {
 //   var datatofetch = req.params.design;
@@ -110,7 +111,7 @@ const postData = async (req, res) => {
         if (err) {
           res.status(403).json({ err: "you are not authenticated" });
         } else {
-          // console.log(user);
+          console.log(user);
           User = user;
         }
       });
@@ -149,7 +150,38 @@ const postData = async (req, res) => {
   });
 };
 const getuserdata = async (req, res) => {
+  var contributions = [];
   const username = req.params.username;
   console.log(username);
+  try {
+    // const findFromDb = async (category) => {
+    //   const result = await category.find({ uploader: username });
+    // };
+    // findFromDb(tshirtdesigns)
+    const user = await User.findOne({ username: username });
+    const finduserdata = (user_name) => {
+      let models = [];
+      models.push(tshirtdesigns);
+
+      models.push(instagramposts);
+
+      return Promise.all(
+        models.map((model) => model.find({ uploader: user_name }))
+      );
+    };
+
+    if (!user) {
+      return res.status(500).json({ err: "user not found" });
+    } else {
+      finduserdata(username)
+        .then((result) => res.status(200).json({ msg: result, user: user }))
+        .catch((err) => console.log(err));
+    }
+
+    // console.log(contributions);
+    // res.status(200).json({ msg: contributions });
+  } catch (err) {
+    console.log(err);
+  }
 };
 module.exports = { getAllData, getOne, postData, getuserdata };
