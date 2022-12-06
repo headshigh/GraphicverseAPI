@@ -25,6 +25,9 @@ const dataSchema = new mongoose.Schema(
       type: String,
       // required: [true, "URl must be provided"],
     },
+    category: {
+      type: String,
+    },
     Size: {
       type: Number,
     },

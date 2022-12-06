@@ -31,6 +31,9 @@ const dataSchema = new mongoose.Schema(
     fileformat: {
       type: String,
     },
+    category: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

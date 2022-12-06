@@ -11,6 +11,11 @@ const user = new mongoose.Schema(
       type: String,
       required: [true, "fullname is required"],
     },
+    //changes
+    isVerified: {
+      type: Boolean,
+    },
+    //
     password: {
       type: String,
       required: [true, "password is required"],

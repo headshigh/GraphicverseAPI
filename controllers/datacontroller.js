@@ -135,13 +135,17 @@ const postData = async (req, res) => {
             // data: fs.readFileSync("uploads"),
             contentType: "image/png",
           },
+          category: type,
           Psd: {
             data: fs.readFileSync(
               path.join(__dirname, "..", "uploads", req.files[1].filename)
             ),
             // data: req.files["testImage"][1].filename,
           },
-          fileformat: req.files[1].filename.slice(-3),
+          fileformat:
+            req.files[1].filename.slice(-3) == "peg"
+              ? "jpeg"
+              : req.files[1].filename.slice(-3),
         })
         .then(() => res.send("sucessful"))
 
@@ -164,6 +168,7 @@ const getuserdata = async (req, res) => {
       models.push(tshirtdesigns);
 
       models.push(instagramposts);
+      models.push(fake);
 
       return Promise.all(
         models.map((model) => model.find({ uploader: user_name }))
