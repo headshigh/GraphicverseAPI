@@ -5,10 +5,14 @@ const {
   getOne,
   postData,
   getuserdata,
+  del,
+  uploadprofilepic,
 } = require("../controllers/datacontroller");
-const { verifyToken } = require("../verifytoken");
+const { verifyToken, verifyTokenAndOwner } = require("../verifytoken");
 const { register, login } = require("../controllers/usercontroller");
-router.route("/user/:username").get(getuserdata);
+router.route("/user/:username").get(getuserdata).patch(uploadprofilepic);
+
+router.route("/delete/:id").delete(verifyToken, del);
 // router.route("row/:design").get(getDataRow);
 router.route("/register").post(register);
 router.route("/:design").get(getAllData);

@@ -23,7 +23,7 @@ const register = async (req, res) => {
       const newuser = await user.create({
         username: username,
         email: email,
-        isVerified:false,
+        isVerified: false,
         fullname: name,
         password: hashedpassword,
       });
@@ -56,7 +56,7 @@ const login = async (req, res) => {
         res.status(500).json({ msg: "Wrong Password" });
       } else {
         const token = jwt.sign({ loggeduser }, process.env.JWT);
-        return res.status(200).json({ token: token });
+        return res.status(200).json({ token: token, user: loggeduser });
       }
     }
   } catch (err) {

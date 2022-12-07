@@ -9,7 +9,7 @@ const festivals = require("../models/festivals");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const fake = require("../models/fake");
-const upload = require("../upload");
+const { upload, upload2 } = require("../upload");
 const jwt = require("jsonwebtoken");
 const { FSWatcher } = require("vite");
 const fs = require("fs");
@@ -32,6 +32,7 @@ const User = require("../models/users");
 
 //   }
 // };
+
 const getAllData = async (req, res) => {
   //must send page as query to limit the data sent to 31 else if page is not defined all th data will be sent coz it is required in row component
   var datatofetch = req.params.design;
@@ -96,6 +97,47 @@ const getOne = async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ err: err });
+  }
+};
+const uploadprofilepic = async (req, res) => {
+  try {
+    var User2;
+    upload2(req, res, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // console.log(req.body.jwt);
+        jwt.verify(req.body.jwt, process.env.JWT, (err, user) => {
+          if (err) {
+            res.status(403).json({ err: "you are not authenticated" });
+          } else {
+            console.log(user);
+            User2 = user;
+          }
+        });
+        // console.log(req.file);
+        console.log(path.join(__dirname, "..", "uploads", req.file.filename));
+        const result = User.findOneAndUpdate(
+          { username: req.params.username },
+          {
+            profilepic: {
+              data: fs.readFileSync(
+                path.join(__dirname, "..", "uploads", req.file.filename)
+              ),
+            },
+          },
+          { new: true, runValidators: true }
+        )
+          .then((result) => {
+            // console.log(result);
+            res.status(200).json({ result });
+          })
+          .catch((err) => res.status(401).json({ err }));
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ err });
   }
 };
 const postData = async (req, res) => {
@@ -189,4 +231,40 @@ const getuserdata = async (req, res) => {
     console.log(err);
   }
 };
-module.exports = { getAllData, getOne, postData, getuserdata };
+const del = async (req, res) => {
+  try {
+    const cat = req.body.cat;
+    console.log(req.body);
+    const graphic = eval(cat);
+    console.log(graphic);
+    console.log(req.body);
+    const data = await graphic.findOne({ _id: req.params.id });
+    console.log(data.uploader);
+    if (!data) {
+      res.status(404).json({ err: "Not found" });
+    } else {
+      if (data.uploader != req.body.uploader) {
+        return res.status(500).json({ err: "not authorized to delete" });
+      } else {
+        const del = await graphic.findOneAndDelete({ _id: req.params.id });
+
+        if (!del) {
+          return res.status(500).json({ msg: "unable to delete" });
+        } else {
+          return res.status(200).json({ del });
+        }
+      }
+    }
+  } catch (err) {
+    res.status(404).json({ error: err });
+    console.log(err);
+  }
+};
+module.exports = {
+  getAllData,
+  getOne,
+  postData,
+  getuserdata,
+  del,
+  uploadprofilepic,
+};

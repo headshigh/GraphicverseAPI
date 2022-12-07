@@ -2,6 +2,7 @@ const { response } = require("express");
 const JWT = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
+  console.log(req.body);
   console.log(req.body.jwt);
   JWT.verify(req.body.jwt, process.env.JWT, (err, user) => {
     if (err) {
@@ -11,4 +12,5 @@ const verifyToken = (req, res, next) => {
     }
   });
 };
-module.exports = { verifyToken };
+const verifyTokenAndOwner = (req, res, next) => {};
+module.exports = { verifyToken, verifyTokenAndOwner };

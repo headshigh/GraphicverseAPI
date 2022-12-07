@@ -15,6 +15,9 @@ const user = new mongoose.Schema(
     isVerified: {
       type: Boolean,
     },
+    profilepic: {
+      data: Buffer,
+    },
     //
     password: {
       type: String,
