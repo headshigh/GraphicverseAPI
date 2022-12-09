@@ -8,6 +8,16 @@ app.use(cors());
 const connectDB = require("./connect");
 app.use("/api", route);
 require("dotenv").config();
+// app.use(express.static("public"));
+// var bodyParser = require("body-parser");
+// app.use(bodyParser.json({ limit: "50mb" }));
+// app.use(
+//   bodyParser.urlencoded({
+//     parameterLimit: 100000,
+//     limit: "50mb",
+//     extended: true,
+//   })
+// );
 
 const start = async () => {
   try {

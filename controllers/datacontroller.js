@@ -105,6 +105,7 @@ const uploadprofilepic = async (req, res) => {
     upload2(req, res, (err) => {
       if (err) {
         console.log(err);
+        console.log("hi");
       } else {
         // console.log(req.body.jwt);
         jwt.verify(req.body.jwt, process.env.JWT, (err, user) => {
@@ -115,8 +116,9 @@ const uploadprofilepic = async (req, res) => {
             User2 = user;
           }
         });
-        // console.log(req.file);
-        console.log(path.join(__dirname, "..", "uploads", req.file.filename));
+        console.log(req.file);
+        // console.log(path.join(__dirname, "..", "uploads", req.file.filename));
+        // console.log(req.file.filename);
         const result = User.findOneAndUpdate(
           { username: req.params.username },
           {
@@ -133,6 +135,7 @@ const uploadprofilepic = async (req, res) => {
             res.status(200).json({ result });
           })
           .catch((err) => res.status(401).json({ err }));
+        console.log(err);
       }
     });
   } catch (err) {
