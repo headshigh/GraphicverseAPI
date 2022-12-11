@@ -12,7 +12,7 @@ const { verifyToken, verifyTokenAndOwner } = require("../verifytoken");
 const { register, login } = require("../controllers/usercontroller");
 router.route("/user/:username").get(getuserdata).post(uploadprofilepic);
 
-router.route("/delete/:id").delete(verifyToken, del);
+router.route("/delete/:id").delete(del);
 // router.route("row/:design").get(getDataRow);
 router.route("/register").post(register);
 router.route("/:design").get(getAllData);

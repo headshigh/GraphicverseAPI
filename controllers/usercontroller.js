@@ -55,8 +55,25 @@ const login = async (req, res) => {
       if (!(await bcrypt.compare(password, loggeduser.password))) {
         res.status(500).json({ msg: "Wrong Password" });
       } else {
-        const token = jwt.sign({ loggeduser }, process.env.JWT);
-        return res.status(200).json({ token: token, user: loggeduser });
+        const token = jwt.sign(
+          {
+            username: loggeduser.username,
+            password: loggeduser.password,
+            fullname: loggeduser.fullname,
+            createdAt: loggeduser.createdAt,
+          },
+          process.env.JWT
+        );
+        return res.status(200).json({
+          token: token,
+          user: {
+            username: loggeduser.username,
+            password: loggeduser.password,
+            fullname: loggeduser.fullname,
+            createdAt: loggeduser.createdAt,
+            isVerified: loggeduser.isVerified,
+          },
+        });
       }
     }
   } catch (err) {

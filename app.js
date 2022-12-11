@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const route = require("./routes/data");
-app.use(express.json());
+app.use(express.json({ limit: "5mb" }));
 var cors = require("cors");
 app.use(cors());
 const connectDB = require("./connect");

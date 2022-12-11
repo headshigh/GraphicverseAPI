@@ -171,7 +171,7 @@ const postData = async (req, res) => {
       const newimage = graph
         .create({
           Name: req.body.Name,
-          uploader: User.loggeduser.username,
+          uploader: User.username,
           Image: {
             data: fs.readFileSync(
               path.join(__dirname, "..", "uploads", req.files[0].filename)
@@ -213,7 +213,11 @@ const getuserdata = async (req, res) => {
       models.push(tshirtdesigns);
 
       models.push(instagramposts);
-      models.push(fake);
+      models.push(banners);
+      models.push(socialnetworks);
+      models.push(festivals);
+      models.push(festivals);
+      models.push(logos);
 
       return Promise.all(
         models.map((model) => model.find({ uploader: user_name }))
@@ -239,11 +243,16 @@ const del = async (req, res) => {
     const cat = req.body.cat;
     console.log(req.body);
     const graphic = eval(cat);
-    console.log(graphic);
-    console.log(req.body);
+    console.log("graphic" + graphic);
+    console.log("cat" + cat);
+    // console.log("body" + req.body);
+    console.log("uploader-" + req.body.uploader);
+    console.log("jwt-" + req.body.jwt);
+    console.log("id-" + req.params.id);
     const data = await graphic.findOne({ _id: req.params.id });
     console.log(data.uploader);
     if (!data) {
+      console.log("not found");
       res.status(404).json({ err: "Not found" });
     } else {
       if (data.uploader != req.body.uploader) {
