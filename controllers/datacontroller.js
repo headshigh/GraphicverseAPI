@@ -11,7 +11,6 @@ const multer = require("multer");
 const fake = require("../models/fake");
 const { upload, upload2 } = require("../upload");
 const jwt = require("jsonwebtoken");
-const { FSWatcher } = require("vite");
 const fs = require("fs");
 const path = require("path");
 const User = require("../models/users");
